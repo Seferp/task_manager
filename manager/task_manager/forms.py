@@ -6,15 +6,26 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'describe', 'date_start', 'date_end']
-        label = ['Title', 'Describe', 'Start Date', 'End Date']
+        label = {
+            'title': 'Title',
+            'describe': 'Describe',
+            'date_start': 'Start Date',
+            'date_end': 'End Date'
+        }
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(label='Passowrd', widget=forms.PasswordInput)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email',]
-        label = ['Username', 'First name', 'Last name', 'Email',]
+        fields = ['username', 'first_name', 'last_name', 'email']
+        labels = {
+            'username': 'User name',
+            'first_name' : 'First name',
+            'last_name': 'Last name',
+            'email': 'Email'
+        }
+
 
         def clean_password(self):
             cd = self.cleaned_data

@@ -3,11 +3,10 @@ from .models import Task
 from .forms import UserRegistrationForm, TaskForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
-
-
 
 
 def login_view(request):
@@ -46,6 +45,7 @@ def register_user(request):
         form = UserRegistrationForm()
         return render(request, 'registration/register.html', {'form': form})
 
+@login_required()
 def create_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -53,6 +53,8 @@ def create_task(request):
             new_task = form.save(commit=False)
             new_task.user = request.user
             new_task.save()
+            new_task.connected_users.add(request.user)
+            form.save_m2m()
             return redirect('task_list')
     else:
         form = TaskForm()

@@ -5,11 +5,18 @@ from django.contrib.auth.models import User
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'describe']
+        fields = ['title', 'describe', 'date_start', 'date_end']
         label = {
             'title': 'Title',
             'describe': 'Describe',
+            'date_start': 'Start Date',
+            'date_end': 'End Date'
         }
+        widgets = {
+            'date_start': forms.DateInput(attrs={'type': 'date'}),
+            'date_end': forms.DateInput(attrs={'type': 'date'}),
+        }
+
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)

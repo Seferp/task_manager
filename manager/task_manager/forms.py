@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task
+from .models import Task, Comment
 from django.contrib.auth.models import User
 
 class TaskForm(forms.ModelForm):
@@ -37,3 +37,12 @@ class UserRegistrationForm(forms.ModelForm):
             if cd['password'] != cd['password2']:
                 raise forms.ValidationError('Passwords don\'t macht')
             return cd['password2']
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        labels = {
+            'content': 'Comment here...'
+        }

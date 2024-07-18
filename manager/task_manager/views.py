@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
-from .models import Task
-from .forms import UserRegistrationForm, TaskForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Task, Comment
+from .forms import UserRegistrationForm, TaskForm, CommentForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 # Create your views here.
@@ -68,3 +69,21 @@ def user_tasks(request):
     else:
         return render(request, 'task_manager/task_list.html')
 
+def task_detail(request, task_title, task_id):
+    task = get_object_or_404(Task, title=task_title, id=task_id)
+    form = CommentForm
+    return render(request, 'task_manager/task_detail.html', {'task': task, 'form': form})
+
+# @require_POST
+# def task_comment(request, task_id):
+#     task = get_object_or_404(Task, id=task_id)
+#     comment = None
+#     form = CommentForm(data=request.POST)
+#     if form.is_valid():
+#         comment = form.save(commit=False)
+#         comment.task = task
+#         comment.save()
+#     return render(request, 'task_manager/task_list.html', {'task':task,
+#                                                            'from': form,
+#                                                            'comment': comment})
+#

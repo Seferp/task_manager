@@ -10,13 +10,14 @@
         <ul>
             {% for task in tasks %}
                 <li>
-                    <h3>{{ task.title }}</h3>
+                    <a href="{% url 'task_detail' task.title task.id %}"><h3>{{ task.title }}</h3></a>
+                    <h3>{{ task.id }}</h3>
                 </li>
             {% empty %}
                 <p> There is no task yet</p>
             {% endfor %}
         </ul>
-        <button><a href="{% url 'create' %}">Add new Task</a></button>
+        <button><a href="{% url 'create_task' %}">Add new Task</a></button>
 {% else %}
     <p>You need to be logged in to view and add tasks.</p>
 {% endif %}

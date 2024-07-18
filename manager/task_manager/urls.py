@@ -9,5 +9,6 @@ urlpatterns = [
     path('register-done/', views.register_user, name='register_done'),
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('create/', views.create_task, name='create'),
+    path('create-task/', views.create_task, name='create_task'),
+    path('task/<str:task_title>-<int:task_id>/', views.task_detail, name='task_detail')
 ]

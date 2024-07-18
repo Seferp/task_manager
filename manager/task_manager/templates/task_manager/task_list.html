@@ -6,14 +6,17 @@
 <h2>Task List</h2>
 
 {% if user.is_authenticated %}
-    <ul>
-        {% for task in tasks %}
-            <li>
-                <h3> {{ task.title }}</h3>
-            </li>
-        {% endfor %}
-    </ul>
-    <button><a href="{% url 'create' %}">Add new Task</a></button>
+    <div id="task_detail">
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    <h3>{{ task.title }}</h3>
+                </li>
+            {% empty %}
+                <p> There is no task yet</p>
+            {% endfor %}
+        </ul>
+        <button><a href="{% url 'create' %}">Add new Task</a></button>
 {% else %}
     <p>You need to be logged in to view and add tasks.</p>
 {% endif %}

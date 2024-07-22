@@ -4,7 +4,8 @@
 {% block content %}
 
 <button type="button"><a href="{% url 'task_list' %}">Task list</a></button>
-<h2>Task Details</h2>
+<h2>Task Details</h2><button type="button"><a href="{% url 'task_update' task.pk %}">Update</a></button>
+
 
 {% if user.is_authenticated %}
     <div id="task_detail">

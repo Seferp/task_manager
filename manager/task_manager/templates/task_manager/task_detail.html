@@ -13,13 +13,17 @@
         <p> {{ task.describe }}</p>
         <p> {{ task.date_start }}</p>
         <p> {{ task.date_end }}</p>
-        <p> {{ task.completed }}</p>
-        <p> {{ task.connected_users }}</p>
+        {% if connected_users %}
+            <ul>
+                {% for user in connected_users %}
+                    <li>{{ user.username }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No one is connected to this task</p>
+        {% endif %}
         <p> {{ task.priority }}</p>
     </div>
 {% endif %}
-
-
-
 {% endblock %}
 

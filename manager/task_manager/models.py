@@ -23,7 +23,7 @@ class Task(models.Model):
     def clean(self):
         if self.date_end and self.date_start:
             if self.date_end < self.date_start:
-                self.date_start = self.date_end
+                self.date_end = self.date_start
 
     def save(self, *args, **kwargs):
         self.clean()

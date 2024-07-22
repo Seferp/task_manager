@@ -5,12 +5,15 @@ from django.contrib.auth.models import User
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'describe', 'date_start', 'date_end']
+        fields = ['title', 'describe', 'date_start', 'date_end', 'connected_users', 'priority']
+
         label = {
             'title': 'Title',
             'describe': 'Describe',
             'date_start': 'Start Date',
-            'date_end': 'End Date'
+            'date_end': 'End Date',
+            'connected_users': 'Connected Users',
+            'priority': 'Priority'
         }
         widgets = {
             'date_start': forms.DateInput(attrs={'type': 'date'}),
@@ -30,7 +33,6 @@ class UserRegistrationForm(forms.ModelForm):
             'last_name': 'Last name',
             'email': 'Email'
         }
-
 
         def clean_password(self):
             cd = self.cleaned_data

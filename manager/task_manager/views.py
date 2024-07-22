@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from .models import Task, Comment
 from .forms import UserRegistrationForm, TaskForm, CommentForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.views.generic import UpdateView
 
 
 # Create your views here.
@@ -71,8 +73,23 @@ def user_tasks(request):
 
 def task_detail(request, task_title, task_id):
     task = get_object_or_404(Task, title=task_title, id=task_id)
-    form = CommentForm
-    return render(request, 'task_manager/task_detail.html', {'task': task, 'form': form})
+    connected_users = task.connected_users.all()
+    form = CommentForm()
+    return render(request, 'task_manager/task_detail.html', {'task': task,
+                                                             'form': form,
+                                                             'connected_users': connected_users})
+
+class TaskUpdate(UpdateView):
+    model = Task
+    template_name = 'task_manager/task_update.html'
+    fields = ['title', 'describe', 'date_start', 'date_end', 'connected_users', 'priority', 'completed']
+
+    def get_success_url(self):
+        task = self.object
+        return reverse_lazy('task_detail', kwargs={'task_title': task.title, 'task_id': task.id})
+
+
+
 
 # @require_POST
 # def task_comment(request, task_id):

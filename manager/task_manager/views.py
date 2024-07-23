@@ -1,12 +1,13 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from .models import Task, Comment
 from .forms import UserRegistrationForm, TaskForm, CommentForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_POST
 from django.views.generic import UpdateView
+from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
@@ -65,16 +66,24 @@ def create_task(request):
 
 def user_tasks(request):
     if request.user.is_authenticated:
-        tasks = Task.objects.filter(user = request.user)
-        return render(request, 'task_manager/task_list.html', {'tasks': tasks})
+        tasks = Task.objects.filter(user=request.user)
+        connected_tasks = Task.objects.filter(connected_users=request.user)
+
+        return render(request, 'task_manager/task_list.html', {
+                          'tasks': tasks,
+                          'connected_tasks': connected_tasks
+                      })
 
     else:
         return render(request, 'task_manager/task_list.html')
 
 def task_detail(request, task_title, task_id):
     task = get_object_or_404(Task, title=task_title, id=task_id)
+    if task.user != request.user and request.user not in task.connected_users.all():
+        raise PermissionDenied
     connected_users = task.connected_users.all()
     form = CommentForm()
+
     return render(request, 'task_manager/task_detail.html', {'task': task,
                                                              'form': form,
                                                              'connected_users': connected_users})
@@ -87,8 +96,6 @@ class TaskUpdate(UpdateView):
     def get_success_url(self):
         task = self.object
         return reverse_lazy('task_detail', kwargs={'task_title': task.title, 'task_id': task.id})
-
-
 
 
 # @require_POST

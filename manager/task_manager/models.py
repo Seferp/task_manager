@@ -29,7 +29,6 @@ class Task(models.Model):
         self.clean()
         super().save(*args, **kwargs)
 
-
 class Comment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment')

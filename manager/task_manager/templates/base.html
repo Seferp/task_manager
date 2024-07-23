@@ -14,6 +14,7 @@
             <button><a href="{% url 'register' %}">Register</a></button>
         {% endif %}
     </div>
+    <button type="button"><a href="{% url 'task_list' %}">Task list</a></button>
     <div id="content">{% block content %}{% endblock %}</div>
 
 </body>

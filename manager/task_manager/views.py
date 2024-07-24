@@ -81,11 +81,23 @@ def task_detail(request, task_title, task_id):
     task = get_object_or_404(Task, title=task_title, id=task_id)
     if task.user != request.user and request.user not in task.connected_users.all():
         raise PermissionDenied
+
     connected_users = task.connected_users.all()
-    form = CommentForm()
+    form = CommentForm(request.POST)
+    comments = task.comments.all()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.task = task
+            comment.user = request.user
+            comment.save()
+            return redirect('task_detail',task_title=task.title, task_id=task.id)
 
     return render(request, 'task_manager/task_detail.html', {'task': task,
                                                              'form': form,
+                                                             'comment': None,
+                                                             'comments': comments,
                                                              'connected_users': connected_users})
 
 class TaskUpdate(UpdateView):
@@ -98,16 +110,3 @@ class TaskUpdate(UpdateView):
         return reverse_lazy('task_detail', kwargs={'task_title': task.title, 'task_id': task.id})
 
 
-# @require_POST
-# def task_comment(request, task_id):
-#     task = get_object_or_404(Task, id=task_id)
-#     comment = None
-#     form = CommentForm(data=request.POST)
-#     if form.is_valid():
-#         comment = form.save(commit=False)
-#         comment.task = task
-#         comment.save()
-#     return render(request, 'task_manager/task_list.html', {'task':task,
-#                                                            'from': form,
-#                                                            'comment': comment})
-#

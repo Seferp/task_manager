@@ -24,6 +24,29 @@
         {% endif %}
         <p> {{ task.priority }}</p>
     </div>
+    <div id="comments">
+        <h2>Comments:</h2>
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <p class="info">
+                        Comment add by {{ comment.user }}
+                        {{ comment.created }}
+                    </p>
+                    {{ comment.content|linebreaks }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="new_coment">
+        <h2>Add Comment</h2>
+
+         <form method="post" action="{% url 'task_detail' task.title task.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add</button>
+        </form>
+    </div>
 {% endif %}
 {% endblock %}
 
